@@ -204,6 +204,7 @@ output application/json
             </ee:message>
         </ee:transform>
 		<set-payload value='#["Set payload added"]' doc:name="Set Payload" doc:id="82efdd5b-79a7-4df4-97ea-c1a6fb83e6b4" />
+		<logger level="INFO" doc:name="Logger" doc:id="87be25af-da72-4291-8242-a8039a46c385" message="logger is also added"/>
     </flow>
     <flow name="get:\customers:openbanking-api-config">
         <logger level="INFO" message="get:\customers:openbanking-api-config" />
