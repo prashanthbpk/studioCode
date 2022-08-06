@@ -3,7 +3,7 @@
     <http:listener-config name="openbanking-api-httpListenerConfig">
         <http:listener-connection host="0.0.0.0" port="8081" />
     </http:listener-config>
-    <apikit:config name="openbanking-api-config" api="resource::34d97a6f-7593-494d-a26c-ea744fc85554:openbanking-api:1.0.6:raml:zip:openbanking-api.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
+    <apikit:config name="openbanking-api-config" api="resource::34d97a6f-7593-494d-a26c-ea744fc85554:openbanking-api:1.0.6:raml:zip:openbanking-api.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" queryParamsStrictValidation="true" headersStrictValidation="true"/>
     <flow name="openbanking-api-main">
         <http:listener config-ref="openbanking-api-httpListenerConfig" path="/api/*">
             <http:response statusCode="#[vars.httpStatus default 200]">
@@ -35,10 +35,12 @@ output application/json
                         <ee:set-payload><![CDATA[%dw 2.0
 output application/json
 ---
-{message: "Resource not found"}]]></ee:set-payload>
+{
+	message: "Resource not found"
+}]]></ee:set-payload>
                     </ee:message>
                     <ee:variables>
-                        <ee:set-variable variableName="httpStatus">404</ee:set-variable>
+                        <ee:set-variable variableName="httpStatus"><![CDATA[404]]></ee:set-variable>
                     </ee:variables>
                 </ee:transform>
             </on-error-propagate>
@@ -61,10 +63,10 @@ output application/json
                         <ee:set-payload><![CDATA[%dw 2.0
 output application/json
 ---
-{message: "Not acceptable"}]]></ee:set-payload>
+{message: "Not acceptable" }]]></ee:set-payload>
                     </ee:message>
                     <ee:variables>
-                        <ee:set-variable variableName="httpStatus">406</ee:set-variable>
+                        <ee:set-variable variableName="httpStatus"><![CDATA[406]]></ee:set-variable>
                     </ee:variables>
                 </ee:transform>
             </on-error-propagate>
