@@ -1,0 +1,52 @@
+#%RAML 1.0 Library
+types:
+  customerTypeLibraryData:
+    properties:
+      firstName:
+        type: string
+        required: true
+        example: James
+      lastName:
+        type: string
+        required: true
+        example: Corton
+      address:
+        type: Address[]
+      phone:
+        type: Phone[]
+        
+  Address:
+    properties:
+      street:
+        type: string
+        required: true
+        example: 101 Oxford Street
+      city:
+        type: string
+        required: true
+        example: London
+      state:
+        type: string
+        required: true
+        example: Birmingham
+      country:
+        type: string
+        required: true
+        example: United Kingdom
+      postalCode:
+        type: string
+        required: true
+        example: 101A01
+      addressType:
+        enum: [Home, Office]
+        example: Home
+  Phone:
+    properties:
+      phoneNumber:
+        type: number
+        required: false
+        example: 1234567890
+      phoneType:
+        enum: [Mobile, Landline]
+        example: Mobile
+          

@@ -1,0 +1,77 @@
+#%RAML 1.0
+title: openbanking-api
+protocols: [HTTP, HTTPS]
+mediaType: 
+- application/json
+
+
+securitySchemes:
+  MyCustomSecuritySchema : !include securityScheme/customSecurityScheme.raml
+
+securedBy:
+  - MyCustomSecuritySchema
+
+uses:
+  MycustLibrary : libraries/customLibrary.raml
+  bankCollection: resourceTypes/myCustomresourceType.raml
+
+types:
+  myFirstDatatype : !include data-types/myCustomDataType.raml
+
+
+/accounts:
+  type: {bankCollection.accountCollection: {exampleReference1: !include examples/account.json,exampleReference2: !include examples/account.json,exampleReference3: !include examples/account_response.json}}
+  get:
+    queryParameters:
+      customerId:
+        type: string
+        required: false
+        example: "23232323"
+  post:
+        
+  /{accountId}:
+    type: {bankCollection.accountCollection: {exampleReference1: !include examples/account.json}}
+    get:
+
+    /balances:
+      type: {bankCollection.accountCollection: {exampleReference1: !include examples/account.json}}
+      get:
+                
+
+    /transactions:
+      type: {bankCollection.accountCollection: {exampleReference1: !include examples/account.json}}
+      get:
+        queryParameters:
+          fromDate:
+            type: string
+            required: true
+            example: "2020-08-08"
+          toDate:
+            type: string
+            required: false
+            example: "2020-08-08"
+          
+      /{transactionId}:
+        type: {bankCollection.accountCollection: {exampleReference1: !include examples/account.json}}
+        get:
+
+/customers:
+  get:
+    description: Fetch all customers
+    responses:
+      200:
+        body:
+          application/json:
+            type: MycustLibrary.customerTypeLibraryData[]
+
+/extra:
+  post:
+    description: Fetch all customers
+    body:
+      application/json:
+        type: myFirstDatatype[]
+    responses:
+      201:
+        body:
+          application/json:
+            type: myFirstDatatype[]

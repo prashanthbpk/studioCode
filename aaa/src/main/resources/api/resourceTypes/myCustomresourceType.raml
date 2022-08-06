@@ -1,0 +1,42 @@
+#%RAML 1.0 Library
+
+traits:
+  errorResponse: !include ../traits/error_trait.raml
+  client-id-required:
+    headers:
+      my_client_id:
+        type: string
+      my_client_secret:
+        type: string
+    responses:
+      401:
+        description: Unauthorized or invalid client-app-credentials
+      500:
+        description: Bad Response from Authorization server, or WSDL SOAP fault error
+
+resourceTypes:
+  accountCollection:
+    get?:
+      is: [client-id-required,errorResponse]
+      description: This is used to fetch <<resourcePathName>>
+      responses:
+        200:
+          body:
+            application/json:
+              example: |
+                <<exampleReference1>>
+        
+    post?:
+      is: [client-id-required,errorResponse]
+      description: This is used to create <<resourcePathName>>
+      body:
+        application/json:
+          example: |
+            <<exampleReference2>>
+      responses:
+        200:
+          body:
+            application/json:
+              example: |
+                <<exampleReference3>>
+            
