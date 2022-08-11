@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:os="http://www.mulesoft.org/schema/mule/os" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/current/mule-os.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="5a2611f9-28d7-463c-8d9c-feea92a37ea1" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<os:object-store name="Object_store" doc:name="Object store" doc:id="d7129cac-c130-4003-ac72-3caf297c976e" />
+	<flow name="object-storeFlow" doc:id="0edf5ade-611e-4c31-8b15-cc8e1fb8a3e1" >
+		<http:listener doc:name="Listener" doc:id="9c008068-2039-4f65-b954-c7c6eba1aa60" config-ref="HTTP_Listener_config" path="/world"/>
+		<http:request method="GET" doc:name="Request" doc:id="1510e4d5-30b9-4bc2-8d9e-ed1804b87457" url="http://worldtimeapi.org/api/timezone/America/Argentina/Salta"/>
+		<ee:transform doc:name="Transform Message" doc:id="1c23efc8-bc88-4de1-a38c-ef7dde476656" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<os:store doc:name="Store" doc:id="38055972-e6d7-42e2-8132-2fcc7052e7d0" key="timeZoneValue" objectStore="Object_store">
+			<os:value ><![CDATA[#[payload.timezone]]]></os:value>
+		</os:store>
+		<flow-ref doc:name="Flow Reference" doc:id="0d078751-9da3-45b3-a665-ba6aca99cdc8" name="object-storeFlow1"/>
+	</flow>
+	<flow name="object-storeFlow1" doc:id="71ba6130-4110-4767-bc19-40748f538762" >
+		<os:retrieve doc:name="Retrieve" doc:id="6edfe302-82f7-43db-8ac2-81a42944819a" objectStore="Object_store" key="timeZoneValue"/>
+		<logger level="INFO" doc:name="Logger" doc:id="5c2d2ee2-4228-4b24-8409-56de4343dedb" message="#[payload]"/>
+	</flow>
+</mule>
